@@ -53,8 +53,9 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='tanh', solver='ada
 mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 '''
 
+# Use a tanh activation function because its useful when there is data centered around zero which is true in our case
 #3 layers - 8,4,2 neurons in each - 95.2% accuracy
-mlp = MLPClassifier(hidden_layer_sizes=(16, 8, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+mlp = MLPClassifier(hidden_layer_sizes=(16, 8, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 # Re-train using the training data
 mlp.fit(X_train, y_train)  # Use X_train and y_train here
