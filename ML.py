@@ -59,8 +59,8 @@ mlp = MLPClassifier(hidden_layer_sizes=(16, 8, 2), activation='tanh', solver='ad
 
 # Implementing Grid Search for hyperparameter tuning
 param_grid = {
-    'hidden_layer_sizes': [(16, 8, 2), (8, 4, 2), (20, 10, 2), (40, 20, 2), (40, 25, 10, 2), (7, 4, 2), (15, 5, 3)],  # Experimenting with different sizes
-    'activation': ['relu', 'tanh'],  # Experimenting with different activation functions
+    'hidden_layer_sizes': [(16, 8, 2), (8, 4, 2), (9, 5, 2), (7, 4, 2), (15, 5, 3)],  # Experimenting with different sizes
+    'activation': ['tanh'],  # Experimenting with different activation functions
     'alpha': [0.0001, 0.001, 0.01],  # Different values for L2 regularization
     'learning_rate_init': [0.001, 0.01, 0.1]  # Different initial learning rates
 }
