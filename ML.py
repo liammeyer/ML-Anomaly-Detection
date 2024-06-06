@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import StandardScaler
 
 # Load Data
 attack = pd.read_csv('Attack.csv', low_memory=False)
@@ -26,8 +27,12 @@ X = X.select_dtypes(exclude='object')  # This excludes all columns of type 'obje
 
 y = combinedPatientAttack['label']  # Keep only the target column
 
+# Data feature scaling, using sklearn
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
 # Train/Test Split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42, stratify=y)
 
 # Initialize MLPClassifier
 
