@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
@@ -57,11 +57,28 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 #3 layers - 8,4,2 neurons in each - 95.2% accuracy
 mlp = MLPClassifier(hidden_layer_sizes=(16, 8, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
+# Implementing Grid Search for hyperparameter tuning
+param_grid = {
+    'hidden_layer_sizes': [(16, 8, 2), (8, 4, 2), (20, 10, 2), (40, 20, 2), (40, 25, 10, 2), (7, 4, 2), (15, 5, 3)],  # Experimenting with different sizes
+    'activation': ['relu', 'tanh'],  # Experimenting with different activation functions
+    'alpha': [0.0001, 0.001, 0.01],  # Different values for L2 regularization
+    'learning_rate_init': [0.001, 0.01, 0.1]  # Different initial learning rates
+}
+
+grid_search = GridSearchCV(mlp, param_grid, cv=5, verbose=3)
+grid_search.fit(X_train, y_train)
+
+# Train the model with the best parameters found by GridSearchCV
+best_mlp = grid_search.best_estimator_
+best_mlp.fit(X_train, y_train)
+
 # Re-train using the training data
-mlp.fit(X_train, y_train)  # Use X_train and y_train here
+#mlp.fit(X_train, y_train)  # Use X_train and y_train here
 
 # Predict the labels for the test set
-predictions = mlp.predict(X_test)
+#predictions = mlp.predict(X_test)
+
+predictions = best_mlp.predict(X_test)
 
 # Evaluate the model
 accuracy = accuracy_score(y_test, predictions)
