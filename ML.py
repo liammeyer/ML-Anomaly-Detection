@@ -31,12 +31,15 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 # Initialize MLPClassifier
 
+'''
 #2 layers - 2 neurons in each - 51% accuracy
 mlp = MLPClassifier(hidden_layer_sizes=(2, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 #3 layers - 50 in first, 20 in second, and 5 in third - 99.98% accuracy
 mlp = MLPClassifier(hidden_layer_sizes=(50, 20, 5), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 #3 layers - 2 neurons in each - 69% accuracy
 mlp = MLPClassifier(hidden_layer_sizes=(2, 2, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+'''
+
 #3 layers - 2 neurons in each - 92% accuracy
 mlp = MLPClassifier(hidden_layer_sizes=(5, 3, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
