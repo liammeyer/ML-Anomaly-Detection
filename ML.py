@@ -72,6 +72,16 @@ grid_search.fit(X_train, y_train)
 best_mlp = grid_search.best_estimator_
 best_mlp.fit(X_train, y_train)
 
+#activation=tanh, alpha=0.0001, hidden_layer_sizes=(7, 4, 2), learning_rate_init=0.001;, score=0.966 total time=   2.3s
+#activation=tanh, alpha=0.0001, hidden_layer_sizes=(15, 5, 3), learning_rate_init=0.001;, score=0.965 total time=   2.6s
+#activation=tanh, alpha=0.001, hidden_layer_sizes=(16, 8, 2), learning_rate_init=0.001;, score=0.968 total time=   4.0s
+#activation=tanh, alpha=0.001, hidden_layer_sizes=(7, 4, 2), learning_rate_init=0.001;, score=0.966 total time=   2.7s
+#activation=tanh, alpha=0.001, hidden_layer_sizes=(15, 5, 3), learning_rate_init=0.001;, score=0.966 total time=   5.0s
+#activation=tanh, alpha=0.01, hidden_layer_sizes=(7, 4, 2), learning_rate_init=0.001;, score=0.978 total time=  10.4s
+#activation=tanh, alpha=0.01, hidden_layer_sizes=(7, 4, 2), learning_rate_init=0.001;, score=0.968 total time=   5.5s
+#activation=tanh, alpha=0.001, hidden_layer_sizes=(16, 8, 2), learning_rate_init=0.001;, score=0.968 total time=   4.0s
+
+
 # Re-train using the training data
 #mlp.fit(X_train, y_train)  # Use X_train and y_train here
 
