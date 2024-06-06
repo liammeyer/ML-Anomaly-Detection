@@ -45,10 +45,12 @@ mlp = MLPClassifier(hidden_layer_sizes=(50, 20, 5), activation='relu', solver='a
 mlp = MLPClassifier(hidden_layer_sizes=(2, 2, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 #3 layers - 2 neurons in each - 92% accuracy
 mlp = MLPClassifier(hidden_layer_sizes=(5, 3, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+#3 layers - 5,3,2 neurons in each - tanh activation function - 94% accuracy
+mlp = MLPClassifier(hidden_layer_sizes=(5, 3, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 '''
 
-#3 layers - 2 neurons in each - 92% accuracy
-mlp = MLPClassifier(hidden_layer_sizes=(5, 3, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+#4 layers - 10,7,4,2 neurons in each - 94% accuracy
+mlp = MLPClassifier(hidden_layer_sizes=(10, 7, 4, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 # Re-train using the training data
 mlp.fit(X_train, y_train)  # Use X_train and y_train here
