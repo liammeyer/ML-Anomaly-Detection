@@ -48,7 +48,7 @@ mlp = MLPClassifier(hidden_layer_sizes=(5, 3, 2), activation='relu', solver='ada
 '''
 
 #3 layers - 2 neurons in each - 92% accuracy
-mlp = MLPClassifier(hidden_layer_sizes=(5, 3, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=400)
+mlp = MLPClassifier(hidden_layer_sizes=(5, 3, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 # Re-train using the training data
 mlp.fit(X_train, y_train)  # Use X_train and y_train here
