@@ -65,7 +65,8 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 
 # For temp dataset
 #2 layers - 2,2 neurons in each - 78.4% accuracy
-mlp = MLPClassifier(hidden_layer_sizes=(4, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+#2 layers - 4,2 neurons in each - 78.3% accuracy
+mlp = MLPClassifier(hidden_layer_sizes=(16, 8, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 
 
