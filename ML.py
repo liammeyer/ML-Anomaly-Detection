@@ -29,7 +29,9 @@ temps = pd.read_csv('MLTempDataset.csv', low_memory=False)
 # Prepare Data
 # X = combinedPatientAttack.drop('label', axis=1)  # Drop the target column to create a feature set
 
-X = temps.drop('index', 'Datetime', 'label', axis=1)
+X = temps.drop('index', axis=1)
+X = temps.drop('label', axis=1)
+X = temps.drop('Datetime', axis=1)
 # X = X.select_dtypes(exclude='object')  # This excludes all columns of type 'object', typically strings
 y = temps['label']  # Keep only the target column
 
