@@ -3,12 +3,16 @@ import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
 
 # Load Data
-attack = pd.read_csv('Attack.csv', low_memory=False)
-patient = pd.read_csv('patientMonitoring.csv', low_memory=False)
-environment = pd.read_csv('environmentMonitoring.csv')
+# attack = pd.read_csv('Attack.csv', low_memory=False)
+# patient = pd.read_csv('patientMonitoring.csv', low_memory=False)
+# environment = pd.read_csv('environmentMonitoring.csv')
+temps = pd.read_csv('MLTempDataset', low_memory=False)
+
 
 # Preprocess and handle missing data if needed
 # attack.replace([np.inf, -np.inf], np.nan, inplace=True)
@@ -18,18 +22,18 @@ environment = pd.read_csv('environmentMonitoring.csv')
 # patient.dropna(inplace=True)
 # environment.dropna(inplace=True)
 
+
 # Combine patient and attack data
-combinedPatientAttack = pd.concat([patient, attack], axis=0)
+# combinedPatientAttack = pd.concat([patient, attack], axis=0)
 
 # Prepare Data
-X = combinedPatientAttack.drop('label', axis=1)  # Drop the target column to create a feature set
+# X = combinedPatientAttack.drop('label', axis=1)  # Drop the target column to create a feature set
+
+X = temps.drop('label', axis=1)
 X = X.select_dtypes(exclude='object')  # This excludes all columns of type 'object', typically strings
+y = temps['label']  # Keep only the target column
 
-y = combinedPatientAttack['label']  # Keep only the target column
 
-# Data feature scaling, using sklearn
-#scaler = StandardScaler()
-#X_scaled = scaler.fit_transform(X)
 
 # Train/Test Split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
@@ -54,10 +58,12 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 '''
 
 # Use a tanh activation function because its useful when there is data centered around zero which is true in our case
-#3 layers - 8,4,2 neurons in each - 95.2% accuracy
-mlp = MLPClassifier(hidden_layer_sizes=(16, 8, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+#3 layers - 7,4,2 neurons in each - 97.8% accuracy
+mlp = MLPClassifier(hidden_layer_sizes=(7, 4, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 # Implementing Grid Search for hyperparameter tuning
+
+'''
 param_grid = {
     'hidden_layer_sizes': [(16, 8, 2), (8, 4, 2), (9, 5, 2), (7, 4, 2), (15, 5, 3)],  # Experimenting with different sizes
     'activation': ['tanh'],  # Experimenting with different activation functions
@@ -80,15 +86,15 @@ best_mlp.fit(X_train, y_train)
 #activation=tanh, alpha=0.01, hidden_layer_sizes=(7, 4, 2), learning_rate_init=0.001;, score=0.978 total time=  10.4s
 #activation=tanh, alpha=0.01, hidden_layer_sizes=(7, 4, 2), learning_rate_init=0.001;, score=0.968 total time=   5.5s
 #activation=tanh, alpha=0.001, hidden_layer_sizes=(16, 8, 2), learning_rate_init=0.001;, score=0.968 total time=   4.0s
-
+'''
 
 # Re-train using the training data
-#mlp.fit(X_train, y_train)  # Use X_train and y_train here
+mlp.fit(X_train, y_train)  # Use X_train and y_train here
 
 # Predict the labels for the test set
-#predictions = mlp.predict(X_test)
+predictions = mlp.predict(X_test)
 
-predictions = best_mlp.predict(X_test)
+#predictions = best_mlp.predict(X_test)
 
 # Evaluate the model
 accuracy = accuracy_score(y_test, predictions)
