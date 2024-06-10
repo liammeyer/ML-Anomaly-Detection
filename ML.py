@@ -16,10 +16,10 @@ temps = pd.read_csv('MLTempDataset.csv', low_memory=False)
 
 
 # Preprocess and handle missing data if needed
-temps.replace([np.inf, -np.inf], np.nan, inplace=True)
+# temps.replace([np.inf, -np.inf], np.nan, inplace=True)
 # patient.replace([np.inf, -np.inf], np.nan, inplace=True)
 # environment.replace([np.inf, -np.inf], np.nan, inplace=True)
-temps.dropna(inplace=True)
+# temps.dropna(inplace=True)
 # patient.dropna(inplace=True)
 # environment.dropna(inplace=True)
 
