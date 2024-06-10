@@ -74,7 +74,7 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 #3 layers logistic- 16,8,2 - 78.5%
 #3 layers logistic- 9,5,2 - 77.6
 
-mlp = MLPClassifier(hidden_layer_sizes=(7, 3, 1), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+mlp = MLPClassifier(hidden_layer_sizes=(5, 3, 1), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 # activation=relu, alpha=0.001, hidden_layer_sizes=(8, 4, 2), learning_rate_init=0.1;, score=0.829 total time=   0.2s
 # activation=relu, alpha=0.001, hidden_layer_sizes=(9, 5, 2), learning_rate_init=0.1;, score=0.868 total time=   0.4s
