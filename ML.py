@@ -75,12 +75,16 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 #3 layers logistic- 16,8,2 - 78.5%
 #3 layers logistic- 9,5,2 - 77.6
 
-mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+# mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 # activation=relu, alpha=0.001, hidden_layer_sizes=(8, 4, 2), learning_rate_init=0.1;, score=0.829 total time=   0.2s
 # activation=relu, alpha=0.001, hidden_layer_sizes=(9, 5, 2), learning_rate_init=0.1;, score=0.868 total time=   0.4s
 # activation=relu, alpha=0.001, hidden_layer_sizes=(9, 5, 2), learning_rate_init=0.1;, score=0.848 total time=   0.2s
 
+
+# Logistic Regression attempt
+# Initialize Logistic Regression model
+log_reg = LogisticRegression(max_iter=1000, random_state=1)
 
 
 # Implementing Grid Search for hyperparameter tuning
@@ -110,13 +114,23 @@ best_mlp.fit(X_train, y_train)
 #activation=tanh, alpha=0.001, hidden_layer_sizes=(16, 8, 2), learning_rate_init=0.001;, score=0.968 total time=   4.0s
 '''
 
+# MLP Fit
 # Re-train using the training data
-mlp.fit(X_train, y_train)  # Use X_train and y_train here
+#mlp.fit(X_train, y_train)  # Use X_train and y_train here
 
 # Predict the labels for the test set
-predictions = mlp.predict(X_test)
+#predictions = mlp.predict(X_test)
 
 #predictions = best_mlp.predict(X_test)
+
+# Evaluate the model
+#accuracy = accuracy_score(y_test, predictions)
+
+# Log Reg Fit
+log_reg.fit(X_train, y_train)
+
+# Predict the labels for the test set
+predictions = best_log_reg.predict(X_test)
 
 # Evaluate the model
 accuracy = accuracy_score(y_test, predictions)
