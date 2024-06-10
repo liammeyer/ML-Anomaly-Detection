@@ -69,7 +69,8 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 #3 layers tanh- 16,8,2 neurons in each - 21.2% accuracy
 #3 layers relu- 16,8,2 neurons in each - 78.9% accuracy
 #3 layers logistic- 8,4,2 - 78.3%
-mlp = MLPClassifier(hidden_layer_sizes=(7, 4, 2), activation='logistic', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+#3 layers logistic- 7,4,2 - 78.3%
+mlp = MLPClassifier(hidden_layer_sizes=(16, 8, 2), activation='logistic', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 
 
