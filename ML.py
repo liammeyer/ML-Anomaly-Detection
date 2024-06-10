@@ -31,7 +31,28 @@ temps.dropna(inplace=True)
 # X = combinedPatientAttack.drop('label', axis=1)  # Drop the target column to create a feature set
 
 # Convert datetime columns to pandas datetime object and extract features
+temps['Datetime1'] = pd.to_datetime(temps['Datetime1'], errors='coerce')
 temps['Datetime'] = pd.to_datetime(temps['Datetime'], errors='coerce')
+
+# Extract components from Datetime1
+temps['year1'] = temps['Datetime1'].dt.year
+temps['month1'] = temps['Datetime1'].dt.month
+temps['day1'] = temps['Datetime1'].dt.day
+temps['hour1'] = temps['Datetime1'].dt.hour
+temps['minute1'] = temps['Datetime1'].dt.minute
+temps['second1'] = temps['Datetime1'].dt.second
+temps['dayofweek1'] = temps['Datetime1'].dt.dayofweek
+
+# Extract components from Datetime
+temps['year'] = temps['Datetime'].dt.year
+temps['month'] = temps['Datetime'].dt.month
+temps['day'] = temps['Datetime'].dt.day
+temps['hour'] = temps['Datetime'].dt.hour
+temps['minute'] = temps['Datetime'].dt.minute
+temps['second'] = temps['Datetime'].dt.second
+temps['dayofweek'] = temps['Datetime'].dt.dayofweek
+
+
 X = temps.drop('index', axis=1)
 X = temps.drop('label', axis=1)
 X = X.select_dtypes(exclude='object')  # This excludes all columns of type 'object', typically strings
