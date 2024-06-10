@@ -71,7 +71,7 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 #3 layers logistic- 8,4,2 - 78.3%
 #3 layers logistic- 7,4,2 - 78.3%
 #3 layers logistic- 16,8,2 - 78.5%
-mlp = MLPClassifier(hidden_layer_sizes=(16, 8, 2), activation='logistic', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+mlp = MLPClassifier(hidden_layer_sizes=(4, 2), activation='logistic', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 
 
