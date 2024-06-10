@@ -16,10 +16,10 @@ temps = pd.read_csv('MLTempDataset.csv', low_memory=False)
 
 
 # Preprocess and handle missing data if needed
-# attack.replace([np.inf, -np.inf], np.nan, inplace=True)
+temps.replace([np.inf, -np.inf], np.nan, inplace=True)
 # patient.replace([np.inf, -np.inf], np.nan, inplace=True)
 # environment.replace([np.inf, -np.inf], np.nan, inplace=True)
-# attack.dropna(inplace=True)
+temps.dropna(inplace=True)
 # patient.dropna(inplace=True)
 # environment.dropna(inplace=True)
 
@@ -70,6 +70,7 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 #3 layers relu- 16,8,2 neurons in each - 78.9% accuracy
 #3 layers logistic- 8,4,2 - 78.3%
 #3 layers logistic- 7,4,2 - 78.3%
+#3 layers logistic- 16,8,2 - 78.5%
 mlp = MLPClassifier(hidden_layer_sizes=(16, 8, 2), activation='logistic', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 
