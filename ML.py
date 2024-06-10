@@ -131,7 +131,7 @@ best_mlp.fit(X_train, y_train)
 log_reg.fit(X_train, y_train)
 
 # Predict the labels for the test set
-predictions = best_log_reg.predict(X_test)
+predictions = log_reg.predict(X_test)
 
 # Evaluate the model
 accuracy = accuracy_score(y_test, predictions)
