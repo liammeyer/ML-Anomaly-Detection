@@ -55,7 +55,7 @@ temps['dayofweek'] = temps['Datetime'].dt.dayofweek
 
 X = temps.drop('index', axis=1)
 X = temps.drop('label', axis=1)
-X = X.select_dtypes(exclude='object')  # This excludes all columns of type 'object', typically strings
+# X = X.select_dtypes(exclude='object')  # This excludes all columns of type 'object', typically strings
 y = temps['label']  # Keep only the target column
 
 
