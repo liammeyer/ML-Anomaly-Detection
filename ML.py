@@ -32,8 +32,6 @@ temps = pd.read_csv('MLTempDataset.csv', low_memory=False)
 
 X = temps.drop('index', axis=1)
 X = temps.drop('label', axis=1)
-# X = temps.drop('Datetime', axis=1)
-# X = temps.drop('Datetime1', axis=1)
 X = X.select_dtypes(exclude='object')  # This excludes all columns of type 'object', typically strings
 y = temps['label']  # Keep only the target column
 
@@ -70,7 +68,7 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 #2 layers tanh- 4,2 neurons in each - 78.3% accuracy
 #3 layers tanh- 16,8,2 neurons in each - 21.2% accuracy
 #3 layers relu- 16,8,2 neurons in each - 78.9% accuracy
-mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 
 
