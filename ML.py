@@ -78,10 +78,10 @@ mlp = MLPClassifier(hidden_layer_sizes=(4, 2), activation='logistic', solver='ad
 
 # Implementing Grid Search for hyperparameter tuning
 
-'''
+
 param_grid = {
-    'hidden_layer_sizes': [(16, 8, 2), (8, 4, 2), (9, 5, 2), (7, 4, 2), (15, 5, 3)],  # Experimenting with different sizes
-    'activation': ['tanh'],  # Experimenting with different activation functions
+    'hidden_layer_sizes': [(8, 4, 2), (9, 5, 2), (7, 4, 2)],  # Experimenting with different sizes
+    'activation': ['tanh', 'relu', 'logistic'],  # Experimenting with different activation functions
     'alpha': [0.0001, 0.001, 0.01],  # Different values for L2 regularization
     'learning_rate_init': [0.001, 0.01, 0.1]  # Different initial learning rates
 }
@@ -101,7 +101,7 @@ best_mlp.fit(X_train, y_train)
 #activation=tanh, alpha=0.01, hidden_layer_sizes=(7, 4, 2), learning_rate_init=0.001;, score=0.978 total time=  10.4s
 #activation=tanh, alpha=0.01, hidden_layer_sizes=(7, 4, 2), learning_rate_init=0.001;, score=0.968 total time=   5.5s
 #activation=tanh, alpha=0.001, hidden_layer_sizes=(16, 8, 2), learning_rate_init=0.001;, score=0.968 total time=   4.0s
-'''
+
 
 # Re-train using the training data
 mlp.fit(X_train, y_train)  # Use X_train and y_train here
