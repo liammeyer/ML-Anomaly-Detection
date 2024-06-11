@@ -3,10 +3,13 @@ import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
+from tensorflow.keras.models import Sequential
+from sklearn.metrics import accuracy_score, classification_report
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
+from tensorflow.keras.layers import LSTM, Dense, Dropout
+from tensorflow.keras.callbacks import EarlyStopping
 
 
 # Load Data
@@ -38,6 +41,9 @@ X = temps.drop('label', axis=1)
 X = X.select_dtypes(exclude='object')  # This excludes all columns of type 'object', typically strings
 y = temps['label']  # Keep only the target column
 
+
+# Reshape X to be 3D [samples, timesteps, features] for LSTM
+X = X.reshape(X.shape[0], 1, X.shape[1])
 
 
 # Train/Test Split
@@ -76,7 +82,7 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 #3 layers logistic- 16,8,2 - 78.5%
 #3 layers logistic- 9,5,2 - 77.6
 
-mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
+# mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 
 # activation=relu, alpha=0.001, hidden_layer_sizes=(8, 4, 2), learning_rate_init=0.1;, score=0.829 total time=   0.2s
 # activation=relu, alpha=0.001, hidden_layer_sizes=(9, 5, 2), learning_rate_init=0.1;, score=0.868 total time=   0.4s
@@ -86,6 +92,26 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='relu', solver='ada
 # Logistic Regression attempt
 # Initialize Logistic Regression model
 # log_reg = LogisticRegression(max_iter=1000, random_state=1)
+
+
+# Build the LSTM model
+model = Sequential()
+model.add(LSTM(units=50, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
+model.add(Dropout(0.2))
+model.add(LSTM(units=50, return_sequences=False))
+model.add(Dropout(0.2))
+model.add(Dense(units=1, activation='sigmoid'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Fit the model
+early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+history = model.fit(X_train, y_train, epochs=100, batch_size=32, validation_split=0.2, callbacks=[early_stopping])
+
+# Predict the labels for the test set
+y_pred = model.predict(X_test)
+y_pred = (y_pred > 0.5).astype(int)
 
 
 # Implementing Grid Search for hyperparameter tuning
@@ -117,15 +143,17 @@ best_mlp.fit(X_train, y_train)
 
 # MLP Fit
 # Re-train using the training data
-mlp.fit(X_train, y_train)  # Use X_train and y_train here
+# mlp.fit(X_train, y_train)  # Use X_train and y_train here
 
 # Predict the labels for the test set
-predictions = mlp.predict(X_test)
+# predictions = mlp.predict(X_test)
 
 # predictions = best_mlp.predict(X_test)
 
 # Evaluate the model
 # accuracy = accuracy_score(y_test, predictions)
+
+
 
 # Log Reg Fit
 # log_reg.fit(X_train, y_train)
@@ -136,3 +164,4 @@ predictions = mlp.predict(X_test)
 # Evaluate the model
 accuracy = accuracy_score(y_test, predictions)
 print("Model Accuracy:", accuracy)
+print(classification_report(y_test, y_pred))
