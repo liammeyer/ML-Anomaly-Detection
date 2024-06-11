@@ -6,6 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 import keras_tuner as kt
+from sklearn.model_selection import KFold
 
 # Load Data
 train_temps = pd.read_csv('GlobalLandTemperaturesByMajorCity.csv', low_memory=False)
@@ -72,28 +73,19 @@ loss, accuracy = model.evaluate(X_reshaped_test, y_test)
 print(f"Test Accuracy: {accuracy:.4f}")
 '''
 
-def build_model(hp):
-    model = Sequential()
-    model.add(LSTM(units=hp.Int('units', min_value=32, max_value=256, step=32), 
-                   return_sequences=True, input_shape=(X_reshaped_train.shape[1], X_reshaped_train.shape[2])))
-    model.add(Dropout(hp.Float('dropout', min_value=0.1, max_value=0.5, step=0.1)))
-    model.add(LSTM(units=hp.Int('units2', min_value=32, max_value=256, step=32)))
-    model.add(Dropout(hp.Float('dropout2', min_value=0.1, max_value=0.5, step=0.1)))
-    model.add(Dense(1, activation='sigmoid'))
+kf = KFold(n_splits=5)
+for train_index, val_index in kf.split(X_reshaped_train):
+    X_train_fold, X_val_fold = X_reshaped_train[train_index], X_reshaped_train[val_index]
+    y_train_fold, y_val_fold = y_train[train_index], y_train[val_index]
     
-    model.compile(optimizer='adam', 
-                  loss='binary_crossentropy', 
-                  metrics=['accuracy'])
-    return model
-
-tuner = kt.RandomSearch(
-    build_model,
-    objective='val_accuracy',
-    max_trials=10,
-    executions_per_trial=1,
-    directory='my_dir',
-    project_name='intro_to_kt')
-
-tuner.search(X_reshaped_train, y_train, epochs=50, validation_split=0.2)
-best_model = tuner.get_best_models()[0]
-best_model.evaluate(X_reshaped_test, y_test)
+    model = Sequential()
+    model.add(LSTM(units=50, return_sequences=True, input_shape=(X_reshaped_train.shape[1], X_reshaped_train.shape[2])))
+    model.add(Dropout(0.2))
+    model.add(LSTM(units=25, return_sequences=False))
+    model.add(Dropout(0.2))
+    model.add(Dense(units=1, activation='sigmoid'))
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    
+    model.fit(X_train_fold, y_train_fold, epochs=50, batch_size=32, validation_data=(X_val_fold, y_val_fold), verbose=2)
+    loss, accuracy = model.evaluate(X_reshaped_test, y_test)
+    print(f"Fold Test Accuracy: {accuracy:.4f}")
