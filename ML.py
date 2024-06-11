@@ -43,11 +43,11 @@ y = temps['label']  # Keep only the target column
 
 
 # Reshape X to be 3D [samples, timesteps, features] for LSTM
-# X = X.reshape(X.shape[0], 1, X.shape[1])
+X_reshaped = X_scaled.reshape((X_scaled.shape[0], 1, X_scaled.shape[1]))
 
 
 # Train/Test Split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42, stratify=y)
+X_train, X_test, y_train, y_test = train_test_split(X_reshaped, y, test_size=0.1, random_state=42, stratify=y)
 
 # Initialize MLPClassifier
 # For Healthcare Dataset
@@ -96,18 +96,15 @@ mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver=
 
 # Build the LSTM model
 model = Sequential()
-model.add(LSTM(units=50, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
-model.add(Dropout(0.2))
-model.add(LSTM(units=50, return_sequences=False))
-model.add(Dropout(0.2))
-model.add(Dense(units=1, activation='sigmoid'))
+model.add(LSTM(50, activation='relu', input_shape=(X_train.shape[1], X_train.shape[2])))
+model.add(Dense(1, activation='sigmoid'))
 
 # Compile the model
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Fit the model
-early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-history = model.fit(X_train, y_train, epochs=100, batch_size=32, validation_split=0.2, callbacks=[early_stopping])
+# early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+history = model.fit(X_train, y_train, epochs=50, batch_size=32, validation_split=0.2, verbose=2)
 
 # Predict the labels for the test set
 y_pred = model.predict(X_test)
