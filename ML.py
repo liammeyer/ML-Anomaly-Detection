@@ -52,7 +52,7 @@ X_train, X_test, y_train, y_test = train_test_split(X_reshaped, y, test_size=0.1
 
 # Initialize MLPClassifier
 # For Healthcare Dataset
-'''
+
 #2 layers - 2 neurons in each - 51% accuracy
 mlp = MLPClassifier(hidden_layer_sizes=(2, 2), activation='relu', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 #3 layers - 50 in first, 20 in second, and 5 in third - 99.98% accuracy
@@ -67,7 +67,7 @@ mlp = MLPClassifier(hidden_layer_sizes=(5, 3, 2), activation='tanh', solver='ada
 mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='tanh', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
 #3 layers - 8,4,2 neurons in each - logistic activation function, performs similar to tanh - 95% accuracy
 mlp = MLPClassifier(hidden_layer_sizes=(8, 4, 2), activation='logistic', solver='adam', random_state=1, verbose=True, early_stopping=True, max_iter=300)
-'''
+
 # For Healthcare Dataset
 # Use a tanh activation function because its useful when there is data centered around zero which is true in our case
 #3 layers - 7,4,2 neurons in each - 97.8% accuracy
@@ -114,7 +114,7 @@ y_pred = (y_pred > 0.5).astype(int)
 
 # Implementing Grid Search for hyperparameter tuning
 
-'''
+
 param_grid = {
     'hidden_layer_sizes': [(8, 4, 2), (9, 5, 2), (7, 4, 2)],  # Experimenting with different sizes
     'activation': ['tanh', 'relu', 'logistic'],  # Experimenting with different activation functions
@@ -137,7 +137,7 @@ best_mlp.fit(X_train, y_train)
 #activation=tanh, alpha=0.01, hidden_layer_sizes=(7, 4, 2), learning_rate_init=0.001;, score=0.978 total time=  10.4s
 #activation=tanh, alpha=0.01, hidden_layer_sizes=(7, 4, 2), learning_rate_init=0.001;, score=0.968 total time=   5.5s
 #activation=tanh, alpha=0.001, hidden_layer_sizes=(16, 8, 2), learning_rate_init=0.001;, score=0.968 total time=   4.0s
-'''
+
 
 # MLP Fit
 # Re-train using the training data
