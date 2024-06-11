@@ -62,7 +62,7 @@ model.add(Dense(units=1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Fit the model
-history = model.fit(X_reshaped_train, y_train, epochs=500, batch_size=32, validation_split=0.2, verbose=2)
+history = model.fit(X_reshaped_train, y_train, epochs=20, batch_size=32, validation_split=0.2, verbose=2)
 
 # Evaluate the model
 loss, accuracy = model.evaluate(X_reshaped_test, y_test)
