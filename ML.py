@@ -5,7 +5,6 @@ from sklearn.preprocessing import StandardScaler
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
-from tensorflow.keras.callbacks import EarlyStopping
 
 # Load Data
 train_temps = pd.read_csv('GlobalLandTemperaturesByMajorCity.csv', low_memory=False)
@@ -62,10 +61,9 @@ model.add(Dropout(0.3))
 model.add(Dense(units=1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
 
 # Fit the model
-history = model.fit(X_reshaped_train, y_train, epochs=20, batch_size=32, validation_split=0.2, callbacks=[early_stopping], verbose=2)
+history = model.fit(X_reshaped_train, y_train, epochs=20, batch_size=32, validation_split=0.2, verbose=2)
 
 # Evaluate the model
 loss, accuracy = model.evaluate(X_reshaped_test, y_test)
