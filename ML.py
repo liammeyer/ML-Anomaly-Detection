@@ -56,6 +56,6 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 history = model.fit(X_train, y_train, epochs=50, batch_size=32, validation_split=0.2, verbose=2)
 
 # Evaluate the model
-accuracy = model.evaluate(X_test, y_test)
+loss, accuracy = model.evaluate(X_test, y_test)
 print(f"Test Accuracy: {accuracy:.4f}")
 
