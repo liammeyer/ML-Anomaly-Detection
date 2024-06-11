@@ -62,8 +62,6 @@ model.add(LSTM(units=50, return_sequences=True, input_shape=(X_reshaped_train.sh
 model.add(Dropout(0.2))
 model.add(LSTM(units=25, return_sequences=False))
 model.add(Dropout(0.2))
-model.add(LSTM(units=12, return_sequences=False))
-model.add(Dropout(0.2))
 model.add(Dense(units=1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
