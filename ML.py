@@ -41,8 +41,15 @@ X_train, X_test, y_train, y_test = train_test_split(X_reshaped, y, test_size=0.2
 
 # Define the LSTM model
 model = Sequential()
-model.add(LSTM(50, activation='relu', input_shape=(X_train.shape[1], X_train.shape[2])))
-model.add(Dense(1, activation='sigmoid'))
+
+# model.add(LSTM(50, activation='relu', input_shape=(X_train.shape[1], X_train.shape[2])))
+# model.add(Dense(1, activation='sigmoid'))
+
+model.add(LSTM(units=50, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
+model.add(Dropout(0.2))
+model.add(LSTM(units=50, return_sequences=False))
+model.add(Dropout(0.2))
+model.add(Dense(units=1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Fit the model
@@ -52,4 +59,3 @@ history = model.fit(X_train, y_train, epochs=50, batch_size=32, validation_split
 loss, accuracy = model.evaluate(X_test, y_test)
 print(f"Test Accuracy: {accuracy:.4f}")
 
-print(classification_report(y_test, y_pred))
