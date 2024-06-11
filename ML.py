@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
+import keras_tuner as kt
 
 # Load Data
 train_temps = pd.read_csv('GlobalLandTemperaturesByMajorCity.csv', low_memory=False)
@@ -52,6 +53,7 @@ X_reshaped_train = X_scaled_train.reshape((X_scaled_train.shape[0], 1, X_scaled_
 # Train/Test Split
 # X_train, X_test, y_train, y_test = train_test_split(X_reshaped, y, test_size=0.2, random_state=42, stratify=y)
 
+'''
 # Define the LSTM model
 model = Sequential()
 model.add(LSTM(units=75, return_sequences=True, input_shape=(X_reshaped_train.shape[1], X_reshaped_train.shape[2])))
@@ -68,4 +70,30 @@ history = model.fit(X_reshaped_train, y_train, epochs=20, batch_size=32, validat
 # Evaluate the model
 loss, accuracy = model.evaluate(X_reshaped_test, y_test)
 print(f"Test Accuracy: {accuracy:.4f}")
+'''
 
+def build_model(hp):
+    model = Sequential()
+    model.add(LSTM(units=hp.Int('units', min_value=32, max_value=256, step=32), 
+                   return_sequences=True, input_shape=(X_reshaped_train.shape[1], X_reshaped_train.shape[2])))
+    model.add(Dropout(hp.Float('dropout', min_value=0.1, max_value=0.5, step=0.1)))
+    model.add(LSTM(units=hp.Int('units2', min_value=32, max_value=256, step=32)))
+    model.add(Dropout(hp.Float('dropout2', min_value=0.1, max_value=0.5, step=0.1)))
+    model.add(Dense(1, activation='sigmoid'))
+    
+    model.compile(optimizer='adam', 
+                  loss='binary_crossentropy', 
+                  metrics=['accuracy'])
+    return model
+
+tuner = kt.RandomSearch(
+    build_model,
+    objective='val_accuracy',
+    max_trials=10,
+    executions_per_trial=1,
+    directory='my_dir',
+    project_name='intro_to_kt')
+
+tuner.search(X_reshaped_train, y_train, epochs=50, validation_split=0.2)
+best_model = tuner.get_best_models()[0]
+best_model.evaluate(X_reshaped_test, y_test)
