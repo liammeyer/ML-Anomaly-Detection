@@ -43,7 +43,7 @@ y = temps['label']  # Keep only the target column
 
 
 # Reshape X to be 3D [samples, timesteps, features] for LSTM
-X = X.reshape(X.shape[0], 1, X.shape[1])
+# X = X.reshape(X.shape[0], 1, X.shape[1])
 
 
 # Train/Test Split
