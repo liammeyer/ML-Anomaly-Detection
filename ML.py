@@ -29,10 +29,12 @@ temps.drop(columns=['index', 'Datetime1', 'Datetime'], inplace=True)
 X = temps.drop('label', axis=1).select_dtypes(exclude='object')
 y = temps['label']
 
-
+# Scale features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
 
 # Reshape input to be [samples, time steps, features]
-X_reshaped = X.reshape((X_scaled.shape[0], 1, X_scaled.shape[1]))
+X_reshaped = X_scaled.reshape((X_scaled.shape[0], 1, X_scaled.shape[1]))
 
 # Train/Test Split
 X_train, X_test, y_train, y_test = train_test_split(X_reshaped, y, test_size=0.2, random_state=42, stratify=y)
