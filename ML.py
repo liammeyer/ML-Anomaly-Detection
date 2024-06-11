@@ -25,10 +25,10 @@ temps['Day'] = temps['Datetime'].dt.day
 temps['Hour'] = temps['Datetime'].dt.hour
 temps['Minute'] = temps['Datetime'].dt.minute
 
-train_temps['dt'] = pd.to_datetime(temps['dt'])
-train_temps['Year'] = temps['dt'].dt.year
-train_temps['Month'] = temps['dt'].dt.month
-train_temps['Day'] = temps['dt'].dt.day
+train_temps['dt'] = pd.to_datetime(train_temps['dt'])
+train_temps['Year'] = train_temps['dt'].dt.year
+train_temps['Month'] = train_temps['dt'].dt.month
+train_temps['Day'] = train_temps['dt'].dt.day
 
 # Drop unnecessary columns
 temps.drop(columns=['index', 'Datetime1', 'Datetime'], inplace=True)
