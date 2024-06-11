@@ -54,19 +54,15 @@ X_reshaped_train = X_scaled_train.reshape((X_scaled_train.shape[0], 1, X_scaled_
 
 # Define the LSTM model
 model = Sequential()
-
-# model.add(LSTM(50, activation='relu', input_shape=(X_train.shape[1], X_train.shape[2])))
-# model.add(Dense(1, activation='sigmoid'))
-
-model.add(LSTM(units=50, return_sequences=True, input_shape=(X_reshaped_train.shape[1], X_reshaped_train.shape[2])))
-model.add(Dropout(0.2))
-model.add(LSTM(units=25, return_sequences=False))
-model.add(Dropout(0.2))
+model.add(LSTM(units=100, return_sequences=True, input_shape=(X_reshaped_train.shape[1], X_reshaped_train.shape[2])))
+model.add(Dropout(0.3))
+model.add(LSTM(units=50, return_sequences=False))
+model.add(Dropout(0.3))
 model.add(Dense(units=1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Fit the model
-history = model.fit(X_reshaped_train, y_train, epochs=50, batch_size=32, validation_split=0.2, verbose=2)
+history = model.fit(X_reshaped_train, y_train, epochs=100, batch_size=32, validation_split=0.2, verbose=2)
 
 # Evaluate the model
 loss, accuracy = model.evaluate(X_reshaped_test, y_test)
