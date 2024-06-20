@@ -6,30 +6,39 @@ from sklearn.impute import SimpleImputer
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 
-# Load Data
-sensor = pd.read_csv('response.csv', low_memory=False)
+# Load the data
+file_path = 'response.csv'  # Update this with the path to your file
+sensor_data = pd.read_csv(file_path, low_memory=False)
+
+# Display the first few rows and column names to understand the data structure
+print(sensor_data.head())
+print(sensor_data.columns.tolist())
+
+# Identify the relevant columns for temperature, wind speed, and barometric pressure
+relevant_columns = ['sensors__data__temp_out', 'sensors__data__wind_speed_avg', 'sensors__data__wind_speed_hi', 'sensors__data__wind_dir_of_hi', 'sensors__data__pressure_last', 'sensors__lsid']
+
+# Check if the relevant columns are in the dataset
+for col in relevant_columns:
+    if col not in sensor_data.columns:
+        raise ValueError(f"Column '{col}' not found in the dataset")
+
+# Filter relevant columns
+sensor_filtered = sensor_data[relevant_columns]
 
 # Preprocess and handle missing data
-sensor.replace([np.inf, -np.inf], np.nan, inplace=True)
-sensor.dropna(subset=['sensors__lsid'], inplace=True)
-
-# Ensure target variable is binary or categorical and properly encoded
-sensor['sensors__lsid'] = sensor['sensors__lsid'].astype(int)
-
-# Drop columns with excessive missing values (threshold set at 50%)
-threshold = 0.5
-sensor_filtered = sensor.loc[:, sensor.isnull().mean() < threshold]
+sensor_filtered.replace([np.inf, -np.inf], np.nan, inplace=True)
+sensor_filtered.dropna(subset=['sensors__lsid'], inplace=True)
 
 # Fill remaining missing values with median
 imputer = SimpleImputer(strategy='median')
 sensor_filled = pd.DataFrame(imputer.fit_transform(sensor_filtered), columns=sensor_filtered.columns)
 
 # Prepare Data
-X = sensor_filled.drop(['sensors__lsid', 'station_id_uuid'], axis=1, errors='ignore')
+X = sensor_filled.drop('sensors__lsid', axis=1)
 y = sensor_filled['sensors__lsid']
 
 # Train/Test Split without stratification
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
 
 # Scale features
 scaler = StandardScaler()
