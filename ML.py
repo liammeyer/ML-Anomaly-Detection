@@ -45,6 +45,20 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
+# Reshape input to be [samples, time steps, features]
+X_train_reshaped = X_train_scaled.reshape((X_train_scaled.shape[0], 1, X_train_scaled.shape[1]))
+X_test_reshaped = X_test_scaled.reshape((X_test_scaled.shape[0], 1, X_test_scaled.shape[1]))
+
+# Define the LSTM model
+model = Sequential()
+model.add(LSTM(units=50, return_sequences=True, input_shape=(X_train_reshaped.shape[1], X_train_reshaped.shape[2])))
+model.add(Dropout(0.2))
+model.add(LSTM(units=25, return_sequences=False))
+model.add(Dropout(0.2))
+model.add(Dense(units=1, activation='sigmoid'))
+
+
+'''
 # Define a simple Dense model
 model = Sequential()
 model.add(Dense(units=64, activation='relu', input_shape=(X_train_scaled.shape[1],)))
@@ -52,6 +66,8 @@ model.add(Dropout(0.2))
 model.add(Dense(units=32, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(units=1, activation='sigmoid'))  # Sigmoid for binary classification
+'''
+
 
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
