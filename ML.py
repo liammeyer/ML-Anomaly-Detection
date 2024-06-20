@@ -18,8 +18,8 @@ sensor = pd.read_csv('response.csv', low_memory=False)
 # train_temps.dropna(inplace=True)
 # temps.replace([np.inf, -np.inf], np.nan, inplace=True)
 # temps.dropna(inplace=True)
-# sensor.replace([np.inf, -np.inf], np.nan, inplace=True)
-# sensor.dropna(inplace=True)
+sensor.replace([np.inf, -np.inf], np.nan, inplace=True)
+sensor.dropna(inplace=True)
 
 # Feature engineering for datetime column
 # Convert object type in Datetime column to feature
@@ -62,6 +62,7 @@ X_reshaped_train = X_scaled_train.reshape((X_scaled_train.shape[0], 1, X_scaled_
 X = sensor.drop('sensors__lsid', axis=1)
 X = sensor.drop('station_id_uuid', axis=1).select_dtypes(exclude='object')
 y = sensor['sensors__lsid']
+
 # Train/Test Split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
