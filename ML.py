@@ -3,8 +3,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
+import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, LSTM
+from tensorflow.keras.layers import LSTM, Dense, Dropout
 
 # Load the data
 file_path = 'response.csv'  # Update this with the path to your file
@@ -15,7 +16,8 @@ print(sensor_data.head())
 print(sensor_data.columns.tolist())
 
 # Identify the relevant columns for temperature, wind speed, and barometric pressure
-relevant_columns = ['sensors__data__temp_out', 'sensors__data__wind_speed_avg', 'sensors__data__wind_speed_hi', 'sensors__data__wind_dir_of_hi', 'sensors__data__pressure_last', 'sensors__lsid']
+# Replace 'temp_col', 'wind_speed_col', 'pressure_col' with actual column names
+relevant_columns = ['temp_col', 'wind_speed_col', 'pressure_col', 'sensors__lsid']
 
 # Check if the relevant columns are in the dataset
 for col in relevant_columns:
@@ -37,8 +39,8 @@ sensor_filled = pd.DataFrame(imputer.fit_transform(sensor_filtered), columns=sen
 X = sensor_filled.drop('sensors__lsid', axis=1)
 y = sensor_filled['sensors__lsid']
 
-# Train/Test Split without stratification
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
+# Train/Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Scale features
 scaler = StandardScaler()
@@ -57,23 +59,11 @@ model.add(LSTM(units=25, return_sequences=False))
 model.add(Dropout(0.2))
 model.add(Dense(units=1, activation='sigmoid'))
 
-
-'''
-# Define a simple Dense model
-model = Sequential()
-model.add(Dense(units=64, activation='relu', input_shape=(X_train_scaled.shape[1],)))
-model.add(Dropout(0.2))
-model.add(Dense(units=32, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(units=1, activation='sigmoid'))  # Sigmoid for binary classification
-'''
-
-
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Fit the model
-history = model.fit(X_train_scaled, y_train, epochs=20, batch_size=4, validation_split=0.2, verbose=2)
+history = model.fit(X_train_reshaped, y_train, epochs=20, batch_size=32, validation_split=0.2, verbose=2)
 
 # Evaluate the model
-loss, accuracy = model.evaluate(X_test_scaled, y_test)
+loss, accuracy = model.evaluate(X_test_reshaped, y_test)
 print(f"Test Accuracy: {accuracy:.4f}")
