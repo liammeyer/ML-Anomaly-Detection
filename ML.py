@@ -17,7 +17,7 @@ print(sensor_data.columns.tolist())
 
 # Identify the relevant columns for temperature, wind speed, and barometric pressure
 # Replace 'temp_col', 'wind_speed_col', 'pressure_col' with actual column names
-relevant_columns = ['temp_col', 'wind_speed_col', 'pressure_col', 'sensors__lsid']
+relevant_columns = ['sensors__data__temp_out', 'sensors__data__wind_speed_avg', 'sensors__data__wind_speed_hi', 'sensors__data__wind_dir_of_hi', 'sensors__data__pressure_last', 'sensors__lsid']
 
 # Check if the relevant columns are in the dataset
 for col in relevant_columns:
