@@ -18,8 +18,8 @@ sensor = pd.read_csv('response.csv', low_memory=False)
 # train_temps.dropna(inplace=True)
 # temps.replace([np.inf, -np.inf], np.nan, inplace=True)
 # temps.dropna(inplace=True)
-sensor.replace([np.inf, -np.inf], np.nan, inplace=True)
-sensor.dropna(inplace=True)
+# sensor.replace([np.inf, -np.inf], np.nan, inplace=True)
+# sensor.dropna(inplace=True)
 
 # Feature engineering for datetime column
 # Convert object type in Datetime column to feature
