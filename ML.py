@@ -3,7 +3,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
-from imblearn.over_sampling import SMOTE
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 
@@ -26,16 +25,8 @@ sensor_filled = pd.DataFrame(imputer.fit_transform(sensor_filtered), columns=sen
 X = sensor_filled.drop(['sensors__lsid', 'station_id_uuid'], axis=1, errors='ignore')
 y = sensor_filled['sensors__lsid']
 
-# Check if there are enough samples for SMOTE
-if len(y) > 1:
-    # Generate synthetic data using SMOTE
-    smote = SMOTE(random_state=42)
-    X_res, y_res = smote.fit_resample(X, y)
-else:
-    X_res, y_res = X, y
-
-# Train/Test Split
-X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.2, random_state=42, stratify=y_res)
+# Train/Test Split without stratification
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
 
 # Scale features
 scaler = StandardScaler()
