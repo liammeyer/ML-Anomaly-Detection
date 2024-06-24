@@ -20,15 +20,16 @@ sensor_data = pd.read_csv(file_path, low_memory=False)
 relevant_columns = ['sensors__data__temp_out', 'sensors__data__wind_speed_avg', 'sensors__data__wind_speed_hi', 'sensors__data__wind_dir_of_hi', 'sensors__data__pressure_last', 'sensors__lsid']
 
 # Ensure all relevant columns exist in the dataset
-for col in relevant_columns:
-    if col not in sensor_data.columns:
-        raise ValueError(f"Column '{col}' not found in the dataset")
+missing_columns = [col for col in relevant_columns if col not in sensor_data.columns]
+if missing_columns:
+    raise ValueError(f"Columns {missing_columns} not found in the dataset")
 
 sensor_filtered = sensor_data[relevant_columns]
 
 # Preprocess and handle missing data
 sensor_filtered.replace([np.inf, -np.inf], np.nan, inplace=True)
 sensor_filtered.dropna(inplace=True)
+
 imputer = SimpleImputer(strategy='median')
 sensor_filled = pd.DataFrame(imputer.fit_transform(sensor_filtered), columns=sensor_filtered.columns)
 
