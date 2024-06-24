@@ -17,7 +17,7 @@ sensor_data = pd.read_csv(file_path, low_memory=False)
 # Extract relevant columns
 # Assuming 'temp_col', 'wind_speed_col', 'pressure_col' are present in sensor_data
 # Please replace these column names with actual names from your dataset
-relevant_columns = ['temp_col', 'wind_speed_col', 'pressure_col']
+relevant_columns = ['sensors__data__temp_out', 'sensors__data__wind_speed_avg', 'sensors__data__wind_speed_hi', 'sensors__data__wind_dir_of_hi', 'sensors__data__pressure_last', 'sensors__lsid']
 
 # Ensure all relevant columns exist in the dataset
 for col in relevant_columns:
