@@ -1,23 +1,22 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import OneClassSVM
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
-from tensorflow.keras.layers import LSTM, Dense, Dropout
-import tensorflow as tf
+from tensorflow.keras.layers import LSTM, Dense, Dropout, Input, RepeatVector, TimeDistributed
 
 # Load Data
-file_path = 'response.csv'
+file_path = '/mnt/data/response.csv'
 sensor_data = pd.read_csv(file_path, low_memory=False)
 
+# Print the first few rows to understand the data structure
+print(sensor_data.head())
+
 # Extract relevant columns
-# Assuming 'temp_col', 'wind_speed_col', 'pressure_col' are present in sensor_data
-# Please replace these column names with actual names from your dataset
-relevant_columns = ['sensors__data__temp_out', 'sensors__data__wind_speed_avg', 'sensors__data__wind_speed_hi', 'sensors__data__wind_dir_of_hi', 'sensors__data__pressure_last', 'sensors__lsid']
+# Replace these column names with actual names from your dataset
+relevant_columns = ['temp', 'wind_speed', 'barometric_pressure']
 
 # Ensure all relevant columns exist in the dataset
 missing_columns = [col for col in relevant_columns if col not in sensor_data.columns]
@@ -28,31 +27,35 @@ sensor_filtered = sensor_data[relevant_columns]
 
 # Preprocess and handle missing data
 sensor_filtered.replace([np.inf, -np.inf], np.nan, inplace=True)
-sensor_filtered.dropna(inplace=True)
 
+# Print the number of missing values in each column
+print(sensor_filtered.isnull().sum())
+
+# Fill missing values using median strategy
 imputer = SimpleImputer(strategy='median')
 sensor_filled = pd.DataFrame(imputer.fit_transform(sensor_filtered), columns=sensor_filtered.columns)
 
-# Extract deciles from 10-second blocks (100 samples/block assuming 10 samples/second)
+# Verify if there are any remaining NaN values
+print(sensor_filled.isnull().sum())
+
+# Extract deciles from 10-second blocks (assuming 10 samples/second)
 def extract_deciles(block):
     return np.percentile(block, [10, 20, 30, 40, 50, 60, 70, 80, 90], axis=0)
 
-block_size = 100
-blocks = [extract_deciles(sensor_filled[i:i+block_size]) for i in range(0, len(sensor_filled), block_size)]
+block_size = 100  # 10 seconds of data
+blocks = [extract_deciles(sensor_filled[i:i+block_size]) for i in range(0, len(sensor_filled), block_size) if len(sensor_filled[i:i+block_size]) == block_size]
 deciles_data = np.array(blocks)
 
 # Prepare training data (12 days * 24 hours * 60 minutes * 6 blocks/minute)
-# Assuming each day has 8640 blocks (24*60*6) and using 12 days
 num_blocks_per_day = 8640
 num_days = 12
 train_data = deciles_data[:num_blocks_per_day*num_days]
 
-# LSTM model for forecasting next 5 minutes based on previous 10 minutes
-# Reshape data for LSTM (samples, time steps, features)
+# Prepare LSTM input (10 minutes = 60 blocks, forecast next 5 minutes = 30 blocks)
 X = []
 y = []
-time_steps = 60  # 10 minutes (10*6 blocks/minute)
-forecast_steps = 30  # 5 minutes (5*6 blocks/minute)
+time_steps = 60  # 10 minutes
+forecast_steps = 30  # 5 minutes
 
 for i in range(len(train_data) - time_steps - forecast_steps):
     X.append(train_data[i:i+time_steps])
