@@ -8,7 +8,7 @@ from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input, RepeatVector, TimeDistributed
 
 # Load Data
-file_path = 'C:\Users\evank\ML-Anomaly-Detection\ML-Anomaly-Detection\response.csv'
+file_path = '/Users/evank/ML-Anomaly-Detection/ML-Anomaly-Detection/response.csv'
 sensor_data = pd.read_csv(file_path, low_memory=False)
 
 # Print the first few rows to understand the data structure
