@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
-from sklearn.svm import OneClassSVM
 from sklearn.model_selection import train_test_split
+import tensorflow as tf
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input, RepeatVector, TimeDistributed
 
@@ -12,10 +12,10 @@ file_path = '/Users/evank/ML-Anomaly-Detection/ML-Anomaly-Detection/response.csv
 sensor_data = pd.read_csv(file_path, low_memory=False)
 
 # Print the first few rows to understand the data structure
+print("First few rows of the dataset:")
 print(sensor_data.head())
 
 # Extract relevant columns
-# Replace these column names with actual names from your dataset
 relevant_columns = ['sensors__data__temp_out', 'sensors__data__wind_speed_avg', 'sensors__data__wind_speed_hi', 'sensors__data__wind_dir_of_hi', 'sensors__data__pressure_last', 'sensors__lsid']
 
 # Ensure all relevant columns exist in the dataset
@@ -29,6 +29,7 @@ sensor_filtered = sensor_data[relevant_columns]
 sensor_filtered.replace([np.inf, -np.inf], np.nan, inplace=True)
 
 # Print the number of missing values in each column
+print("Missing values in each column:")
 print(sensor_filtered.isnull().sum())
 
 # Fill missing values using median strategy
@@ -36,6 +37,7 @@ imputer = SimpleImputer(strategy='median')
 sensor_filled = pd.DataFrame(imputer.fit_transform(sensor_filtered), columns=sensor_filtered.columns)
 
 # Verify if there are any remaining NaN values
+print("Remaining missing values after imputation:")
 print(sensor_filled.isnull().sum())
 
 # Extract deciles from 10-second blocks (assuming 10 samples/second)
@@ -45,6 +47,9 @@ def extract_deciles(block):
 block_size = 100  # 10 seconds of data
 blocks = [extract_deciles(sensor_filled[i:i+block_size]) for i in range(0, len(sensor_filled), block_size) if len(sensor_filled[i:i+block_size]) == block_size]
 deciles_data = np.array(blocks)
+
+# Print shape of deciles data to check correctness
+print("Shape of deciles data:", deciles_data.shape)
 
 # Prepare training data (12 days * 24 hours * 60 minutes * 6 blocks/minute)
 num_blocks_per_day = 8640
@@ -63,6 +68,14 @@ for i in range(len(train_data) - time_steps - forecast_steps):
 
 X = np.array(X)
 y = np.array(y)
+
+# Print shapes of X and y to check correctness
+print("Shape of X:", X.shape)
+print("Shape of y:", y.shape)
+
+# Check if X and y are non-empty before splitting
+if X.shape[0] == 0 or y.shape[0] == 0:
+    raise ValueError("No data available for training. Check the preprocessing steps.")
 
 # Split data into train and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
