@@ -18,7 +18,7 @@ print("Column names in the dataset:")
 print(sensor_data.columns)
 
 # Extract relevant columns
-relevant_columns = ['sensors__data__temp_out', 'sensors__data__wind_speed_avg', 'sensors__data__wind_speed_hi', 'sensors__data__wind_dir_of_hi', 'sensors__data__pressure_last', 'sensors__lsid']
+relevant_columns = ['sensors__data__temp_out', 'sensors__data__wind_speed_avg', 'sensors__data__pressure_last', 'sensors__lsid']
 
 # Ensure all relevant columns exist in the dataset
 missing_columns = [col for col in relevant_columns if col not in sensor_data.columns]
