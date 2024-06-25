@@ -2,18 +2,20 @@ import pandas as pd
 import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import OneClassSVM
 from sklearn.model_selection import train_test_split
-import tensorflow as tf
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input, RepeatVector, TimeDistributed
 
 # Load Data
-file_path = '/Users/evank/ML-Anomaly-Detection/ML-Anomaly-Detection/response.csv'
+file_path = '/mnt/data/response.csv'
 sensor_data = pd.read_csv(file_path, low_memory=False)
 
 # Print the first few rows to understand the data structure
 print("First few rows of the dataset:")
 print(sensor_data.head())
+print("Column names in the dataset:")
+print(sensor_data.columns)
 
 # Extract relevant columns
 relevant_columns = ['sensors__data__temp_out', 'sensors__data__wind_speed_avg', 'sensors__data__wind_speed_hi', 'sensors__data__wind_dir_of_hi', 'sensors__data__pressure_last', 'sensors__lsid']
